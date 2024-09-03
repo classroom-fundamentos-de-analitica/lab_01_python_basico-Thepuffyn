@@ -12,6 +12,8 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+import csv
+
 
 def pregunta_01():
     """
@@ -21,20 +23,13 @@ def pregunta_01():
     214
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    suma = 0
-
-    for i in range(len(timesheet)):
-        suma += int(timesheet[i][1])    
-
-    return suma
-
+    data = r'data.csv'
+    total = 0
+    with open(data) as file:
+        reader = csv.reader(file, delimiter='\t')
+        for row in reader:
+            total += int(row[1])  # Sumar el valor de la segunda column
+    return total
 
 
 def pregunta_02():
@@ -52,30 +47,20 @@ def pregunta_02():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][0], 1])
+    data = r'data.csv'
+    conteo_letras = {}
 
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        for j in range(len(resultado)):
-            if resultado[j][0] == timesheet[i][0]:
-                resultado[j][1] += 1
-                encontrado = True
-                break
-        
-        if not encontrado:
-            resultado.append([timesheet[i][0], 1])
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra] += 1
+            else:
+                conteo_letras[primera_letra] = 1
 
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_03():
@@ -93,30 +78,18 @@ def pregunta_03():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][0], int(timesheet[0][1])])
-
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        for j in range(len(resultado)):
-            if resultado[j][0] == timesheet[i][0]:
-                resultado[j][1] += int(timesheet[i][1])
-                encontrado = True
-                break
-        
-        if not encontrado:
-            resultado.append([timesheet[i][0], int(timesheet[i][1])])
-
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra] += int(fila[1])
+            else:
+                conteo_letras[primera_letra] = int(fila[1])
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_04():
@@ -141,30 +114,18 @@ def pregunta_04():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][2].split('-')[1], 1])
-    
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        fecha = timesheet[i][2].split('-')
-        for j in range(len(resultado)):
-            if resultado[j][0] == fecha[1]:
-                resultado[j][1] += 1
-                encontrado = True
-                break
-        if not encontrado:
-            resultado.append([fecha[1], 1])
-
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    conteo_meses = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[2].split("-")
+            if primera_letra[1] in conteo_meses:
+                conteo_meses[primera_letra[1]] += 1
+            else:
+                conteo_meses[primera_letra[1]] = 1
+    conteo_ordenado = sorted(conteo_meses.items())
+    return conteo_ordenado
 
 
 def pregunta_05():
@@ -182,34 +143,25 @@ def pregunta_05():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][0], int(timesheet[0][1]), int(timesheet[0][1])])
-
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        for j in range(len(resultado)):
-            if timesheet[i][0] == resultado[j][0]:
-                if int(timesheet[i][1]) > resultado[j][1]:
-                    resultado[j][1] = int(timesheet[i][1])
-                elif int(timesheet[i][1]) < resultado[j][2]:
-                    resultado[j][2] = int(timesheet[i][1])
-                encontrado = True
-                break
-        
-        if not encontrado:
-            print(timesheet[i][0])
-            resultado.append([timesheet[i][0], int(timesheet[i][1]), int(timesheet[i][1])])
-
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[0][0]
+            valor = int(fila[1])
+            if letra in max_min_por_letra:
+                max_valor, min_valor = max_min_por_letra[letra]
+                max_valor = max(max_valor, valor)
+                min_valor = min(min_valor, valor)
+                max_min_por_letra[letra] = (max_valor, min_valor)
+            else:
+                max_min_por_letra[letra] = (valor, valor)
+    max_min_por_letra_lista = sorted(max_min_por_letra.items())
+    l = []
+    for letra, (max_valor, min_valor) in max_min_por_letra_lista:
+        l.append((letra, max_valor, min_valor))
+    return l
 
 
 def pregunta_06():
@@ -234,39 +186,26 @@ def pregunta_06():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace(',', ':') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][4].split(':')[0], int(timesheet[0][4].split(':')[1]), int(timesheet[0][4].split(':')[1])])
-
-    for i in range(len(timesheet)):
-        registro = timesheet[i][4].split(':')
-        inicio = 0
-        if i == 0:
-            inicio = 2
-        for k in range(inicio, len(registro), 2):
-            encontrado = False
-            for j in range(len(resultado)):
-                if resultado[j][0] == registro[k]:
-                    if int(registro[k + 1]) > resultado[j][2]:
-                        resultado[j][2] = int(registro[k + 1])
-                    elif int(registro[k + 1]) < resultado[j][1]:
-                        resultado[j][1] = int(registro[k + 1])
-                    encontrado = True
-                    break
-        
-            if not encontrado:
-                resultado.append([registro[k], int(registro[k + 1]), int(registro[k + 1])])
-
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[4].split(",")
+            for i in range(len(letra)):
+                letra1 = letra[i].split(":")
+                if letra1[0] in max_min_por_letra:
+                    max_valor, min_valor = max_min_por_letra[letra1[0]]
+                    max_valor = max(max_valor, int(letra1[1]))
+                    min_valor = min(min_valor, int(letra1[1]))
+                    max_min_por_letra[letra1[0]] = (max_valor, min_valor)
+                else:
+                    max_min_por_letra[letra1[0]] = (int(letra1[1]), int(letra1[1]))
+    max_min_por_letra_lista = sorted(max_min_por_letra.items())
+    l1 = []
+    for letra, (max_valor, min_valor) in max_min_por_letra_lista:
+        l1.append((letra, min_valor, max_valor))
+    return l1
 
 
 def pregunta_07():
@@ -290,30 +229,19 @@ def pregunta_07():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([int(timesheet[0][1]), [timesheet[0][0]]])
-
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        for j in range(len(resultado)):
-            if resultado[j][0] == int(timesheet[i][1]):
-                resultado[j][1].append(timesheet[i][0])
-                encontrado = True
-                break
-        
-        if not encontrado:
-            resultado.append([int(timesheet[i][1]), [timesheet[i][0]]])
-
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra].append(fila[0])
+            else:
+                conteo_letras[primera_letra] = []
+                conteo_letras[primera_letra].append(fila[0])
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_08():
@@ -338,32 +266,21 @@ def pregunta_08():
     ]
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([int(timesheet[0][1]), [timesheet[0][0]]])
-
-    for i in range(1, len(timesheet)):
-        encontrado = False
-        for j in range(len(resultado)):
-            if resultado[j][0] == int(timesheet[i][1]):
-                if timesheet[i][0] not in resultado[j][1]:
-                    resultado[j][1].append(timesheet[i][0])
-                encontrado = True
-                break
-        
-        if not encontrado:
-            resultado.append([int(timesheet[i][1]), [timesheet[i][0]]])
-
-    resultado = [[x[0], sorted(x[1])] for x in resultado]
-    resultado = [tuple(x) for x in resultado]
-    resultado.sort()
-    return resultado
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            if primera_letra in conteo_letras:
+                if fila[0] not in conteo_letras[primera_letra]:
+                    conteo_letras[primera_letra].append(fila[0])
+            else:
+                conteo_letras[primera_letra] = []
+                conteo_letras[primera_letra].append(fila[0])
+            conteo_letras[primera_letra].sort()
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_09():
@@ -386,38 +303,21 @@ def pregunta_09():
     }
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace(',', ':') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = {}
-    resultado[timesheet[0][4].split(':')[0]] = 1
-
-    for i in range(len(timesheet)):
-        registro = timesheet[i][4].split(':')
-        inicio = 0
-        if i == 0:
-            inicio = 2
-        for k in range(inicio, len(registro), 2):
-            encontrado = False
-            for j in resultado:
-                if j == registro[k]:
-                    resultado[j] += 1
-                    encontrado = True
-                    break
-        
-            if not encontrado:
-                resultado[registro[k]] = 1
-    resultado1 = sorted(resultado)
-    resultado2 = {}
-    
-    for i in resultado1:
-        resultado2[i] = resultado[i]
-    return resultado2
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[4].split(",")
+            for i in range(len(letra)):
+                letra1 = letra[i].split(":")
+                if letra1[0] in max_min_por_letra:
+                    max_min_por_letra[letra1[0]] += 1
+                else:
+                    max_min_por_letra[letra1[0]] = 1
+                    
+    max_min_por_letra = {k: max_min_por_letra[k] for k in sorted(max_min_por_letra.keys())}
+    return max_min_por_letra
 
 
 def pregunta_10():
@@ -438,20 +338,16 @@ def pregunta_10():
 
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace(',', '-') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
+    data = r'data.csv'
+    max_min_por_letra = []
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            i3 = fila[3].split(",")
+            i4 = fila[4].split(",")
+            max_min_por_letra.append((fila[0], len(i3), len(i4)))
 
-    for i in range(len(timesheet)):
-        resultado.append((timesheet[i][0], len(timesheet[i][3].split('-')), len(timesheet[i][4].split('-'))))
-
-    return resultado
+    return max_min_por_letra
 
 
 def pregunta_11():
@@ -472,42 +368,21 @@ def pregunta_11():
 
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace(',', '-') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][3].split('-')[0], int(timesheet[0][1])])
-    
-    for i in range(len(timesheet)):
-        columna4 = timesheet[i][3].split('-')
-        inicio = 0
-        if i == 0:
-            inicio = 1
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            x = fila[3].split(",")
+            for i in range(len(x)):
+                if x[i] in conteo_letras:
+                    conteo_letras[x[i]] += primera_letra
+                else:
+                    conteo_letras[x[i]] = primera_letra
                     
-        for k in range(inicio, len(columna4)):
-            encontrado = False
-            
-            for j in range(len(resultado)):
-                if resultado[j][0] == columna4[k]:
-                    resultado[j][1] += int(timesheet[i][1])
-                    encontrado = True
-                    break
-        
-            if not encontrado:
-                resultado.append([columna4[k], int(timesheet[i][1])])
-    
-    resultado.sort()
-    resultado1 = {}
-    
-    for i in resultado:
-        resultado1[i[0]] = i[1]
-    
-    return resultado1
+    conteo_letras = {k: conteo_letras[k] for k in sorted(conteo_letras.keys())}
+    return conteo_letras
 
 
 def pregunta_12():
@@ -525,40 +400,18 @@ def pregunta_12():
     }
 
     """
-    with open("data.csv", 'r') as file:
-        timesheet = file.readlines()
-    
-    timesheet = [row.replace('\n', '') for row in timesheet]
-    timesheet = [row.replace(',', ':') for row in timesheet]
-    timesheet = [row.replace('\t', ',') for row in timesheet]
-    timesheet = [row.split(',') for row in timesheet]
-    
-    resultado = []
-    resultado.append([timesheet[0][0], int(timesheet[0][4].split(':')[1])])
-    
-    for i in range(len(timesheet)):
-        columna5 = timesheet[i][4].split(':')
-        inicio = 1
-        
-        if i == 0:
-            inicio = 3
-                    
-        for k in range(inicio, len(columna5), 2):
-            encontrado = False
-
-            for j in range(len(resultado)):
-                if resultado[j][0] == timesheet[i][0]:
-                    resultado[j][1] += int(columna5[k])
-                    encontrado = True
-                    break
-        
-            if not encontrado:
-                resultado.append([timesheet[i][0], int(columna5[k])])
-    
-    resultado.sort()
-    resultado1 = {}
-    
-    for i in resultado:
-        resultado1[i[0]] = i[1]
-    
-    return resultado1
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            x = fila[4].split(",")
+            for i in range(len(x)):
+                n = x[i].split(":")
+                if primera_letra in conteo_letras:
+                    conteo_letras[primera_letra] += int(n[1])
+                else:
+                    conteo_letras[primera_letra] = int(n[1])
+    conteo_letras = {k: conteo_letras[k] for k in sorted(conteo_letras.keys())}
+    return conteo_letras
